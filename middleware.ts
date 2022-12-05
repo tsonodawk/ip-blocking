@@ -9,10 +9,16 @@ export const config = {
 
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl;
+  const blockIpList = ["153.127.197.219"];
 
   console.log(`URLは：${url}`);
   const reqIp = getIP(req);
   console.log(`IPは：${url}`);
+
+  if (blockIpList.includes(reqIp)) {
+    url.pathname = "/blocked";
+    return NextResponse.rewrite(url);
+  }
 
   // Rewrite to /blocked if the IP is blocked
   if (url.pathname === "/am-i-blocked") {
